@@ -5,6 +5,7 @@ const Op = Sequelize.Op
 module.exports = app => {
 
     const getNetwork = async (req, resp) => {
+        //Procura todos os usuário com o interesse passado na URL e armazena em um array
         const users = await User.findAll({ attributes: ['name', 'email', 'role', 'interests'], where: { interests: { [Op.contains]: [req.params.interest] } } })
         let usersFinal = []
         let roles = []
@@ -17,6 +18,7 @@ module.exports = app => {
             }
         }
 
+        //Cadastra no DB a reunião e busca se teve reunião feitas com os integrantes 
         const meetings = await Meeting.findOne({ where: { [Op.and]: [{ email1: usersFinal[0].email }, { email2: usersFinal[1].email }, { email3: usersFinal[2].email }, { email4: usersFinal[3].email }] } })
         if (!meetings) {
             Meeting.create({

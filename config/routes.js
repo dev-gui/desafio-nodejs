@@ -2,9 +2,10 @@ module.exports = app => {
     app.post('/signup', app.api.user.save)
     app.post('/signin', app.api.auth.signin)
     app.post('/validateToken', app.api.auth.validateToken)
-    //teste
+    //Teste do Networking
     app.get('/network/:interest', app.api.networking.getNetwork)
 
+    //CRUD Usuário
     app.route('/usuario')
         .all(app.config.passport.authenticate())
         .get(app.api.user.get)

@@ -6,7 +6,9 @@ module.exports = app => {
 
     const { existsOrError, equalsOrError, notExistsOrError } = app.api.validation
 
+    //Middleware para INSERIR e ATUALIZAR
     const save = async (req, resp) => {
+        //Função para encriptografar
         const encryptPassword = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10))
 
         const user = { ...req.body }
@@ -14,6 +16,7 @@ module.exports = app => {
             user.id = req.params.id
         }
 
+        //Validações
         try {
             existsOrError(user.name, 'Nome obrigatório.')
             existsOrError(user.email, 'Email obrigatório.')
@@ -36,6 +39,7 @@ module.exports = app => {
 
         delete user.passwordConfirm
 
+        //UPDATE
         if (user.id) {
 
             User.findOne({ where: { id: user.id } })
@@ -45,6 +49,7 @@ module.exports = app => {
                 .then(resp.status(200).send('Usuário alterado.'))
                 .catch(error => resp.status(500).send(error))
         }
+        //CADASTRAR com envio teste de email
         else {
             User.create(user)
                 .then(() => resp.status(200).send('Usuário salvo'))
